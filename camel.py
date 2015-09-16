@@ -21,7 +21,7 @@ while True:
 
     if choice == "a":
         if water == 0:
-            print("Du har slut på vatten")
+            print("Du har slut på vattena")
             continue
         if thirst == 100:
             print("Alltså du är inte törstig så det är bara dumt att dricka men gör som du vill.")
