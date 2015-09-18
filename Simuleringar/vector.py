@@ -38,5 +38,8 @@ class Vector:
     def __neg__(self):
         return -1*self
 
+    def __iter__(self):
+        return iter((self.x, self.y))
+
     def normalized(self):
         return self / abs(self)

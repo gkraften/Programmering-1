@@ -18,6 +18,10 @@ class Planet:
     def update(self, time):
         self.velocity += time*self.acceleration
         self.pos += time*self.velocity
+        self.acceleration = Vector(0, 0)
+
+        if abs(self.velocity) > 500:
+            self.velocity = Vector(0, 0)
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.color, (int(self.pos.x), int(self.pos.y)), self.radius)
@@ -32,14 +36,18 @@ for i in range(int(screen.get_size()[0]/120)):
     planets.append(Planet(random.randint(30, 60), random.randint(60, screen.get_size()[0] - 60), random.randint(60, screen.get_size()[1] - 60), 3))
 
 moon = Planet(10, screen.get_size()[0]/2, screen.get_size()[1]/2, 1, (255, 0, 0))
-moon.velocity = 50 * Vector(random.uniform(-10, 10), random.uniform(-10, 10)).normalized()
+moon.velocity = 200 * Vector(random.uniform(-10, 10), random.uniform(-10, 10)).normalized()
 
 clock = pygame.time.Clock()
 done = False
+acc = Vector(0, 0)
 while not done:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             done = True
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                moon.velocity = -acc
 
     t = clock.get_time() / 1000
 
@@ -57,12 +65,20 @@ while not done:
             moon.pos.y = height - moon.radius
         moon.velocity = Vector(moon.velocity.x, -moon.velocity.y)
 
+    direction = Vector(0, 0)
     for planet in planets:
         distance = planet.pos - moon.pos
-        force_amp = 0.05*planet.mass*moon.mass/abs(distance)**2
+        distance_len = abs(distance)
+        force_amp = 50*planet.mass*moon.mass/distance_len**2
         angle = math.atan2(distance.y, distance.x)
         force = force_amp*Vector(math.cos(angle), math.sin(angle))
         moon.apply_force(force)
+
+        if distance_len <= planet.radius + moon.radius:
+            moon.velocity = -moon.velocity / 1.001
+            direction = -distance.normalized()
+            moon.pos += (planet.radius - distance_len)*direction + moon.radius*direction.normalized()
+    acc = moon.acceleration
     moon.update(t)
 
     screen.fill((0, 0, 0))
@@ -70,6 +86,9 @@ while not done:
     for planet in planets:
         planet.draw(screen)
     moon.draw(screen)
+
+    pygame.draw.line(screen, (0, 255, 0), list(moon.pos), list(moon.pos + moon.velocity), 2)
+    pygame.draw.line(screen, (255, 0, 255), list(moon.pos), list(moon.pos + acc), 2)
 
     pygame.display.flip()
     clock.tick(60)
