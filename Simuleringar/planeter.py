@@ -36,7 +36,8 @@ for i in range(int(screen.get_size()[0]/120)):
     planets.append(Planet(random.randint(30, 60), random.randint(60, screen.get_size()[0] - 60), random.randint(60, screen.get_size()[1] - 60), 3))
 
 moon = Planet(10, screen.get_size()[0]/2, screen.get_size()[1]/2, 1, (255, 0, 0))
-moon.velocity = 200 * Vector(random.uniform(-10, 10), random.uniform(-10, 10)).normalized()
+#moon.velocity = 200 * Vector(random.uniform(-10, 10), random.uniform(-10, 10)).normalized()
+moon.velocity = Vector(0, 200)
 
 clock = pygame.time.Clock()
 done = False
@@ -74,12 +75,18 @@ while not done:
         moon.apply_force(force)
 
         if distance_len <= planet.radius + moon.radius:
-            hit_plane = Vector(-distance.y, distance.x)
-            hit_angle = math.acos((hit_plane*moon.velocity)/(abs(hit_plane)*abs(moon.velocity)))
-            moon.velocity = moon.velocity.rotated(hit_angle)
-            #moon.apply_force(-abs(moon.velocity)*10000*distance.normalized())
-            # direction = -distance.normalized()
-            # moon.pos += (planet.radius - distance_len)*direction + moon.radius*direction.normalized()
+            hit_plane1 = Vector(-distance.y, distance.x)
+            hit_plane2 = -hit_plane1
+            hit_angle1 = math.acos((hit_plane1*moon.velocity)/(abs(hit_plane1)*abs(moon.velocity)))
+            hit_angle2 = math.acos((hit_plane2*moon.velocity)/(abs(hit_plane2)*abs(moon.velocity)))
+            hit_angle = 0
+            if hit_angle1 < hit_angle2:
+                hit_angle = hit_angle1
+            else:
+                hit_angle = hit_angle2
+            moon.velocity = moon.velocity.rotated(2*hit_angle)
+            direction = -distance.normalized()
+            moon.pos += (planet.radius - distance_len)*direction + moon.radius*direction.normalized()
     acc = moon.acceleration
     moon.update(t)
 
