@@ -65,7 +65,6 @@ while not done:
             moon.pos.y = height - moon.radius
         moon.velocity = Vector(moon.velocity.x, -moon.velocity.y)
 
-    direction = Vector(0, 0)
     for planet in planets:
         distance = planet.pos - moon.pos
         distance_len = abs(distance)
@@ -75,9 +74,12 @@ while not done:
         moon.apply_force(force)
 
         if distance_len <= planet.radius + moon.radius:
-            moon.velocity = -moon.velocity / 1.001
-            direction = -distance.normalized()
-            moon.pos += (planet.radius - distance_len)*direction + moon.radius*direction.normalized()
+            hit_plane = Vector(-distance.y, distance.x)
+            hit_angle = math.acos((hit_plane*moon.velocity)/(abs(hit_plane)*abs(moon.velocity)))
+            moon.velocity = moon.velocity.rotated(hit_angle)
+            #moon.apply_force(-abs(moon.velocity)*10000*distance.normalized())
+            # direction = -distance.normalized()
+            # moon.pos += (planet.radius - distance_len)*direction + moon.radius*direction.normalized()
     acc = moon.acceleration
     moon.update(t)
 

@@ -43,3 +43,6 @@ class Vector:
 
     def normalized(self):
         return self / abs(self)
+
+    def rotated(self, angle):
+        return Vector(self.x*math.cos(angle) - self.y*math.sin(angle), self.x*math.sin(angle) + self.x*math.cos(angle))
