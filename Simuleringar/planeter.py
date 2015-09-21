@@ -28,16 +28,14 @@ class Planet:
 
 pygame.init()
 
-screen = pygame.display.set_mode((1000, 700))
+screen = pygame.display.set_mode((0, 0), pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
 pygame.display.set_caption("Planeter")
 
 planets = []
 for i in range(int(screen.get_size()[0]/120)):
     planets.append(Planet(random.randint(30, 60), random.randint(60, screen.get_size()[0] - 60), random.randint(60, screen.get_size()[1] - 60), 3))
 
-moon = Planet(10, screen.get_size()[0]/2, screen.get_size()[1]/2, 1, (255, 0, 0))
-#moon.velocity = 200 * Vector(random.uniform(-10, 10), random.uniform(-10, 10)).normalized()
-moon.velocity = Vector(0, 200)
+moon = Planet(10, screen.get_size()[0]/2 - 200, screen.get_size()[1]/2, 1, (255, 0, 0))
 
 clock = pygame.time.Clock()
 done = False
@@ -49,6 +47,8 @@ while not done:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 moon.velocity = -acc
+            if event.key == pygame.K_ESCAPE:
+                done = True
 
     t = clock.get_time() / 1000
 
@@ -100,4 +100,4 @@ while not done:
     pygame.draw.line(screen, (255, 0, 255), list(moon.pos), list(moon.pos + acc), 2)
 
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(100)
