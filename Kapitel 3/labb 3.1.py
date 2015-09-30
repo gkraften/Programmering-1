@@ -30,9 +30,9 @@ while not (answer.lower() == "nej" or answer.lower() == "ja"):
 
 answer = input("Vad är derivatan till 3sin(2x)? ")
 if answer == "6cos(2x)":
-    print("Bravo. Du är inte helt pantad.")
+    print("Bravo.")
     correct += 1
 else:
-    print("Alltså du är helt jävla dum i huvudet.")
+    print("Fel")
 
 print("Du hade {} av {} rätt ({}% för de som inte kan räkna ut det)!".format(correct, questions, 100*correct/questions))
