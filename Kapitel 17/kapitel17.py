@@ -12,14 +12,25 @@ def selection_sort(l):
             l[current_pos] = l[min_pos]
             l[min_pos] = temp
 
-n = 1000
+def insertion_sort(l):
+    for i in range(1, len(l)):
+        j = i
+        while j > 0 and l[j] < l[j-1]:
+            temp = l[j]
+            l[j] = l[j-1]
+            l[j-1] = temp
+            j -= 1
+
+n = 100000
 nums = [i for i in range(1, 2*n)]
 the_list = []
 for i in range(n):
     num = random.choice(nums)
     nums.remove(num)
     the_list.append(num)
+nums = None
 
 print(the_list)
-selection_sort(the_list)
+#insertion_sort(the_list)
+the_list.sort()
 print(the_list)
