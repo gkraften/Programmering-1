@@ -1,4 +1,6 @@
 import random
+import time
+from multiprocessing import Process, Queue
 
 
 def selection_sort(l):
@@ -11,6 +13,7 @@ def selection_sort(l):
             temp = l[current_pos]
             l[current_pos] = l[min_pos]
             l[min_pos] = temp
+selection_sort.name = "Selection sort"
 
 def insertion_sort(l):
     for i in range(1, len(l)):
@@ -20,8 +23,17 @@ def insertion_sort(l):
             l[j] = l[j-1]
             l[j-1] = temp
             j -= 1
+insertion_sort.name = "Insertion sort"
 
-n = 100000
+results = []
+def run_test(algorithm, l, q):
+    global results
+    tm = time.clock()
+    algorithm(l)
+    duration = time.clock() - tm
+    q.put(algorithm.name + ": {}s".format(duration))
+
+n = 10000
 nums = [i for i in range(1, 2*n)]
 the_list = []
 for i in range(n):
@@ -30,7 +42,16 @@ for i in range(n):
     the_list.append(num)
 nums = None
 
-print(the_list)
-#insertion_sort(the_list)
-the_list.sort()
-print(the_list)
+list2 = the_list[:]
+list3 = the_list[:]
+
+q = Queue()
+print("Running tests")
+threads = (Process(target=run_test, args=(selection_sort, the_list, q)), Process(target=run_test, args=(selection_sort, the_list, q)), Process(target=run_test, args=(insertion_sort, list2, q)), Process(target=run_test, args=(insertion_sort, list2, q)))
+for t in threads:
+    t.start()
+for t in threads:
+    t.join()
+
+while not q.empty():
+    print(q.get())
