@@ -32,14 +32,14 @@ while not done:
         if event.type == pygame.QUIT:
             done = True
         elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_PLUS and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            if event.key == pygame.K_UP and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 angle += math.pi/24
-            elif event.key == pygame.K_MINUS and pygame.key.get_mods() & pygame.KMOD_SHIFT:
+            elif event.key == pygame.K_DOWN and pygame.key.get_mods() & pygame.KMOD_SHIFT:
                 angle -= math.pi/24
-            elif event.key == pygame.K_PLUS:
+            elif event.key == pygame.K_UP:
                 if n < 15:
                     n += 1
-            elif event.key == pygame.K_MINUS:
+            elif event.key == pygame.K_DOWN:
                 if n > 1:
                     n -= 1
 
